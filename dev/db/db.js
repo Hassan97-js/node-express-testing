@@ -18,15 +18,14 @@ const products = [
     price: 2509
   }
 ];
-
 const users = [];
 const carts = [];
 
 // reset all arrays
 function resetDatabase() {
-  products = [{}];
-  users = [];
-  carts = [];
+  products.splice(3);
+  users.splice(0);
+  carts.splice(0);
 }
 
 // Products
@@ -36,6 +35,14 @@ function getProducts() {
 
 function getProduct(id) {
   return products.find((product) => product.id === id);
+}
+
+function getProductsIds() {
+  const ids = [];
+  for (const product of products) {
+    ids.push(product.id);
+  }
+  return ids;
 }
 
 function addProduct(product) {
@@ -54,9 +61,8 @@ function getProductIndex(product) {
 
 function updateProduct(product) {
   const productIndex = getProductIndex(product);
-  const productToUpdate = products[productIndex];
-  productToUpdate = product;
   products.splice(productIndex, 1);
+  products[productIndex] = product;
 
   return products;
 }
@@ -82,6 +88,7 @@ module.exports = {
   resetDatabase,
   getProduct,
   getProducts,
+  getProductsIds,
   addProduct,
   addProducts,
   updateProduct,
