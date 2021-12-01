@@ -26,13 +26,10 @@ describe("API endpoints tests", () => {
       const products = getProducts();
       const productsIds = getProductsIds();
       const product = getProduct(productsIds[0]);
-      await request
-        .get(`/api/products/${productsIds[0]}`)
-        .expect("Content-Type", /json/)
-        .expect(200)
-        .expect((res) => expect(res.body.product).toStrictEqual(product));
+      const response = await request.get(`/api/products/${productsIds[0]}`).expect("Content-Type", /json/).expect(200);
 
       expect(products.length).toBe(3);
+      expect(response.body.product).toStrictEqual(product);
     } catch (error) {
       console.error(error);
     }
