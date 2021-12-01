@@ -56,15 +56,18 @@ function addProducts(...newProducts) {
 }
 
 function getProductIndex(product) {
-  return products.findIndex((currentProduct) => currentProduct === product.id);
+  return products.findIndex((currentProduct) => currentProduct.id === product.id);
 }
 
-function updateProduct(product) {
+function updateProduct(productId, newProduct) {
+  const product = getProduct(productId);
   const productIndex = getProductIndex(product);
-  products.splice(productIndex, 1);
-  products[productIndex] = product;
 
-  return products;
+  if (productIndex !== -1) {
+    products.splice(productIndex, 1, newProduct);
+  }
+
+  return productIndex;
 }
 
 function deleteProduct(product) {
