@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 // Imports
-const { getProducts, getProduct, addProduct, updateProduct } = require("../db/db");
-/* const { generateUniqueId } = require("../utilities/generic/generators"); */
+const { getProducts, getProduct, addProduct, updateProduct, deleteProduct } = require("../db/db");
 
 router.get("/", (_req, res) => {
   try {
@@ -41,9 +40,8 @@ router.put("/:id", (req, res) => {
   try {
     const newProduct = req.body;
     const productId = req.params.id;
-    const productIndex = updateProduct(productId, newProduct);
-
-    res.status(200).json({ success: productIndex !== -1 ? true : false });
+    const success = updateProduct(productId, newProduct);
+    success ? res.status(200).json({ success: true }) : res.status(400).json({ success: false });
   } catch (error) {
     console.error(error);
   }
@@ -51,7 +49,9 @@ router.put("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   try {
-    res.send("DELETE You're on the user's product page");
+    const id = req.params.id;
+    const success = deleteProduct(id);
+    success ? res.status(202).json({ success: true }) : res.status(400).json({ success: false });
   } catch (error) {
     console.error(error);
   }

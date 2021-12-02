@@ -8,10 +8,11 @@ const { generateUniqueId } = require("../utilities/generic/generators");
 beforeEach(() => resetDatabase());
 afterEach(() => resetDatabase());
 
-describe("API endpoints tests", () => {
+describe("Products API endpoints tests", () => {
   it("GET/ Get Products", async () => {
     try {
       const products = getProducts();
+
       const response = await request.get("/api/products").expect("Content-Type", /json/).expect(200);
 
       expect(products.length).toBe(3);
@@ -26,6 +27,7 @@ describe("API endpoints tests", () => {
       const products = getProducts();
       const productsIds = getProductsIds();
       const product = getProduct(productsIds[0]);
+
       const response = await request.get(`/api/products/${productsIds[0]}`).expect("Content-Type", /json/).expect(200);
 
       expect(products.length).toBe(3);
@@ -45,8 +47,8 @@ describe("API endpoints tests", () => {
       };
 
       await request.post("/api/products").expect("Content-Type", /json/).send(product).expect(201);
-
       const response = await request.get("/api/products");
+
       expect(products.length > 3).toBe(true);
       expect(response.body.products).toStrictEqual(products);
     } catch (error) {
@@ -63,6 +65,7 @@ describe("API endpoints tests", () => {
         name: "CyberPowerPC Wyvern Gaming PC - Intel Core i5-9400F",
         price: 15095
       };
+
       await request
         .put(`/api/products/${productsIds[0]}`)
         .send(updatedProduct)
@@ -76,4 +79,19 @@ describe("API endpoints tests", () => {
       console.error(error);
     }
   });
+});
+
+it("DELETE/ Delete Product", async () => {
+  try {
+    const products = getProducts();
+    const productsIds = getProductsIds();
+
+    await request.delete(`/api/products/${productsIds[1]}`).expect("Content-Type", /json/).expect(202);
+    const response = await request.get("/api/products");
+
+    expect(products.length).toBe(2);
+    expect(response.body.products).toStrictEqual(products);
+  } catch (error) {
+    console.error(error);
+  }
 });

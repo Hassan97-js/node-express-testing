@@ -18,14 +18,27 @@ const products = [
     price: 2509
   }
 ];
-const users = [];
+const users = [
+  {
+    name: "Olof Ulfsson",
+    login: generateUniqueId(3)
+  },
+  {
+    name: "Meja Alfredsson",
+    login: generateUniqueId(3)
+  },
+  {
+    name: "Tessan Alexanderson",
+    login: generateUniqueId(3)
+  }
+];
 const carts = [];
 
 // reset all arrays
 function resetDatabase() {
   products.splice(3);
-  users.splice(0);
-  carts.splice(0);
+  users.splice(3);
+  carts.splice(3);
 }
 
 // Products
@@ -49,37 +62,67 @@ function addProduct(product) {
   products.push(product);
 }
 
-function addProducts(...newProducts) {
-  for (const newProduct of newProducts) {
-    products.push(newProduct);
-  }
-}
-
 function getProductIndex(product) {
   return products.findIndex((currentProduct) => currentProduct.id === product.id);
 }
 
 function updateProduct(productId, newProduct) {
   const product = getProduct(productId);
-  const productIndex = getProductIndex(product);
 
-  if (productIndex !== -1) {
+  if (product) {
+    const productIndex = getProductIndex(product);
     products.splice(productIndex, 1, newProduct);
+    return true;
   }
 
-  return productIndex;
+  return false;
 }
 
-function deleteProduct(product) {
-  const productIndex = getProductIndex(product);
-  products.splice(productIndex, 1);
+function deleteProduct(productId) {
+  const product = getProduct(productId);
 
-  return products;
+  if (product) {
+    const productIndex = getProductIndex(product);
+    products.splice(productIndex, 1);
+    return true;
+  }
+  return false;
 }
 
 // Users
 function getUsers() {
   return users;
+}
+
+function getUser(login) {
+  return users.find((user) => user.login === login);
+}
+
+function getUsersLogins() {
+  const logins = [];
+  for (const user of users) {
+    logins.push(user.login);
+  }
+  return logins;
+}
+
+function addUser(user) {
+  users.push(user);
+}
+
+function getUserIndex(login) {
+  return users.findIndex((currentUser) => currentUser.login === login);
+}
+
+function deleteUser(userLogin) {
+  const user = getUser(userLogin);
+  if (user) {
+    const userIndex = getUserIndex;
+    users.splice(userIndex, 1);
+    console.log(users);
+    return true;
+  }
+  return false;
 }
 
 // Carts
@@ -93,7 +136,11 @@ module.exports = {
   getProducts,
   getProductsIds,
   addProduct,
-  addProducts,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getUsers,
+  getUser,
+  getUsersLogins,
+  addUser,
+  deleteUser
 };
