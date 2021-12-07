@@ -38,8 +38,12 @@ router.post("/", (req, res) => {
 
 router.put("/:id", (req, res) => {
   try {
-    const newProduct = req.body;
     const productId = req.params.id;
+    const newProduct = {
+      id: req.body.id,
+      name: req.body.name,
+      price: req.body.price
+    };
     const success = updateProduct(productId, newProduct);
     success ? res.status(200).json({ success: true }) : res.status(400).json({ success: false });
   } catch (error) {

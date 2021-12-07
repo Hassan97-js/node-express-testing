@@ -8,11 +8,13 @@ const { generateUniqueId } = require("../utilities/generic/generators");
 beforeEach(() => resetDatabase());
 afterEach(() => resetDatabase());
 
+// Global constants
+const products = getProducts();
+const productsIds = getProductsIds();
+
 describe("Products API endpoints tests", () => {
   it("GET/ Get Products", async () => {
     try {
-      const products = getProducts();
-
       const response = await request.get("/api/products").expect("Content-Type", /json/).expect(200);
 
       expect(products.length).toBe(3);
@@ -24,8 +26,6 @@ describe("Products API endpoints tests", () => {
 
   it("GET/ Get Product", async () => {
     try {
-      const products = getProducts();
-      const productsIds = getProductsIds();
       const product = getProduct(productsIds[0]);
 
       const response = await request.get(`/api/products/${productsIds[0]}`).expect("Content-Type", /json/).expect(200);
@@ -39,7 +39,6 @@ describe("Products API endpoints tests", () => {
 
   it("POST/ Create Product", async () => {
     try {
-      const products = getProducts();
       const product = {
         id: generateUniqueId(10),
         name: "ADMI Gaming PC: i5 9400F 4.1GHz Six Core CPU/Nvidia RTX",
@@ -47,9 +46,9 @@ describe("Products API endpoints tests", () => {
       };
 
       await request.post("/api/products").expect("Content-Type", /json/).send(product).expect(201);
-      const response = await request.get("/api/products");
+      const response = await request.get("/api/products").expect("Content-Type", /json/).expect(200);
 
-      expect(products.length > 3).toBe(true);
+      expect(products.length).toBe(4);
       expect(response.body.products).toStrictEqual(products);
     } catch (error) {
       console.error(error);
@@ -58,8 +57,6 @@ describe("Products API endpoints tests", () => {
 
   it("PUT/ Update Product", async () => {
     try {
-      const products = getProducts();
-      const productsIds = getProductsIds();
       const updatedProduct = {
         id: generateUniqueId(10),
         name: "CyberPowerPC Wyvern Gaming PC - Intel Core i5-9400F",
@@ -71,7 +68,7 @@ describe("Products API endpoints tests", () => {
         .send(updatedProduct)
         .expect("Content-Type", /json/)
         .expect(200);
-      const response = await request.get("/api/products");
+      const response = await request.get("/api/products").expect("Content-Type", /json/).expect(200);
 
       expect(products.length).toBe(3);
       expect(response.body.products).toStrictEqual(products);
@@ -83,11 +80,8 @@ describe("Products API endpoints tests", () => {
 
 it("DELETE/ Delete Product", async () => {
   try {
-    const products = getProducts();
-    const productsIds = getProductsIds();
-
     await request.delete(`/api/products/${productsIds[1]}`).expect("Content-Type", /json/).expect(202);
-    const response = await request.get("/api/products");
+    const response = await request.get("/api/products").expect("Content-Type", /json/).expect(200);
 
     expect(products.length).toBe(2);
     expect(response.body.products).toStrictEqual(products);

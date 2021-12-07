@@ -18,6 +18,7 @@ const products = [
     price: 2509
   }
 ];
+
 const users = [
   {
     name: "Olof Ulfsson",
@@ -28,17 +29,24 @@ const users = [
     login: generateUniqueId(3)
   },
   {
-    name: "Tessan Alexanderson",
+    name: "Tessan Alexandersson",
     login: generateUniqueId(3)
   }
 ];
-const carts = [];
+
+const cart = [
+  {
+    userLogin: getUsersLogins()[0],
+    productId: getProductsIds()[0],
+    amount: 2
+  }
+];
 
 // reset all arrays
 function resetDatabase() {
   products.splice(3);
   users.splice(3);
-  carts.splice(3);
+  cart.splice(1);
 }
 
 // Products
@@ -114,20 +122,55 @@ function getUserIndex(login) {
   return users.findIndex((currentUser) => currentUser.login === login);
 }
 
-function deleteUser(userLogin) {
-  const user = getUser(userLogin);
+function deleteUser(login) {
+  const user = getUser(login);
   if (user) {
     const userIndex = getUserIndex;
     users.splice(userIndex, 1);
-    console.log(users);
     return true;
   }
   return false;
 }
 
-// Carts
-function getCarts() {
-  return carts;
+// Cart
+function getCart() {
+  return cart;
+}
+
+function getOrder(id, userLogin) {
+  return cart.find((order) => order.productId === id && order.userLogin === userLogin);
+}
+
+function getOrderIndex(id) {
+  return cart.findIndex((order) => order.productId === id);
+}
+
+function addOrder(order) {
+  cart.push(order);
+}
+
+function updateOrder(orderId, userLogin, newOrder) {
+  const order = getOrder(orderId, userLogin);
+
+  if (order) {
+    const orderIndex = getOrderIndex(order);
+    cart.splice(orderIndex, 1, newOrder);
+    return true;
+  }
+
+  return false;
+}
+
+function deleteOrder(orderId, userLogin) {
+  const order = getOrder(orderId, userLogin);
+
+  if (order) {
+    const orderIndex = getOrderIndex(order);
+    cart.splice(orderIndex, 1);
+    return true;
+  }
+
+  return false;
 }
 
 module.exports = {
@@ -142,5 +185,9 @@ module.exports = {
   getUser,
   getUsersLogins,
   addUser,
-  deleteUser
+  deleteUser,
+  getCart,
+  addOrder,
+  updateOrder,
+  deleteOrder
 };
