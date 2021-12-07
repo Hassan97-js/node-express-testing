@@ -42,7 +42,6 @@ const cart = [
   }
 ];
 
-// reset all arrays
 function resetDatabase() {
   products.splice(3);
   users.splice(3);
